@@ -11,6 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const localFileUpload = async (req, res) => {
   try {
+    
     // Fetch the file from request
     const file = req.files.file;
     console.log("This is the file", file);
@@ -56,20 +57,20 @@ function isFileTypeSupported(type, supportedTypes) {
 }
 
 //function to upload image to clourinary
-async function uploadImageFile(file, folder,quality) {
-  
+async function uploadImageFile(file, folder, quality) {
   const options = { folder };
-  if(quality){
+  if (quality) {
     options.quality = quality;
   }
   console.log("temp file path", file.tempFilePath);
-  options.resource_type = "auto"; 
+  options.resource_type = "auto";
   return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
 
 //image upload to cloudinary handler
 export const imageUpload = async (req, res) => {
   try {
+    
     //data from the request body
     const { name, tags, email } = req.body;
     console.log(name, tags, email);
@@ -86,7 +87,6 @@ export const imageUpload = async (req, res) => {
     console.log("this is file type", fileType);
 
     //check if the file type is not supported
-
     if (!isFileTypeSupported(fileType, supportedTypes)) {
       return res.status(400).json({
         message: "File type not supported",
@@ -99,7 +99,6 @@ export const imageUpload = async (req, res) => {
     console.log(response);
 
     //create entry in the database
-
     const fileData = new User({
       name,
       tags,
@@ -108,7 +107,7 @@ export const imageUpload = async (req, res) => {
     });
 
     await fileData.save();
-    //send file response to database
+   
 
     //send file response
     res.json({
@@ -128,6 +127,7 @@ export const imageUpload = async (req, res) => {
 
 export const videoUpload = async (req, res) => {
   try {
+
     //fetch the information from the request
     const { name, tags, email } = req.body;
     console.log(name, tags, email);
@@ -143,7 +143,6 @@ export const videoUpload = async (req, res) => {
     console.log("this is file type", fileType);
 
     //check if the file type is not supported
-
     if (!isFileTypeSupported(fileType, supportedTypes)) {
       return res.status(400).json({
         message: "File type not supported",
@@ -157,7 +156,6 @@ export const videoUpload = async (req, res) => {
     console.log(response);
 
     //create entry in the database
-
     const fileData = new User({
       name,
       tags,
@@ -166,13 +164,13 @@ export const videoUpload = async (req, res) => {
     });
 
     await fileData.save();
-    //send file response to database
+
+    //send response 
     res.json({
-      success:true,
+      success: true,
       videoUrl: response.secure_url,
       message: "video uploaded successfully",
     });
-
   } catch (error) {
     console.log("This is the error", error);
     res.status(400).json({
@@ -199,7 +197,6 @@ export const imageSizeReducer = async (req, res) => {
   console.log("this is file type", fileType);
 
   //check if the file type is not supported
-
   if (!isFileTypeSupported(fileType, supportedTypes)) {
     return res.status(400).json({
       message: "File type not supported",
@@ -209,11 +206,10 @@ export const imageSizeReducer = async (req, res) => {
 
   //upload the image to cloudinary
   console.log("Uploading image to cloudinary");
-  const response = await uploadImageFile(file, "filenfolder",20);
+  const response = await uploadImageFile(file, "filenfolder", 20);
   console.log(response);
 
   //create entry in the database
-
   const fileData = new User({
     name,
     tags,
@@ -222,7 +218,6 @@ export const imageSizeReducer = async (req, res) => {
   });
 
   await fileData.save();
-  //send file response to database
 
   //send file response
   res.json({
